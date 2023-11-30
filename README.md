@@ -2,12 +2,6 @@
 
 ## Description
 
-This project is a representation of the space state of a problem, in this case the 8-puzzle problem, using the A* algorithm.
-
-## Solution
-
-- in Java 20 maven based project
-
 > **The Tower of Problem, as addressed in the Milton Friedman University's course,**
 > is successfully solved through the application of space state representation. This
 > involves a strategic approach to representing and navigating the possible states of
@@ -15,6 +9,10 @@ This project is a representation of the space state of a problem, in this case t
 > problem-solving technique, emphasizing the importance of space state representation
 > in efficiently reaching solutions for the problem. The Tower Problem is a classic
 > example of a problem that can be solved through space state representation.
+
+## Solution
+
+- in Java 20 maven based project
 
 # Source code
 
@@ -32,5 +30,7 @@ This project is a representation of the space state of a problem, in this case t
 </span>
 
 ---
+
+<br>
 
 [Hungarian description of the task](doc/task.adoc)
