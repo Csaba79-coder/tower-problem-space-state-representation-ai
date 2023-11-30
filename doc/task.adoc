@@ -1,0 +1,3 @@
+= 2.38 Feladat magyarul
+
+image::../src/main/resources/static/images/image-2023-11-30-15-09-38-831.png[]
