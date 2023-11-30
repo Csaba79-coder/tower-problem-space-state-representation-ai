@@ -42,7 +42,7 @@ public abstract class AbstractState implements Cloneable {
         return false;
     }
     // If two instances are equal, their hash codes should be equal.
-    // Override this method if you override the equals method.
+    // Override this method if you override the equal's method.
     @Override
     public int hashCode() {
         return super.hashCode();
