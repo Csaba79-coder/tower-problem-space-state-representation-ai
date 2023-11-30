@@ -8,6 +8,14 @@ This project is a representation of the space state of a problem, in this case t
 
 - in Java 20 maven based project
 
+> **The Tower of Problem, as addressed in the Milton Friedman University's course,**
+> is successfully solved through the application of space state representation. This
+> involves a strategic approach to representing and navigating the possible states of
+> the Tower Problem configuration. The course delves into the intricacies of this
+> problem-solving technique, emphasizing the importance of space state representation
+> in efficiently reaching solutions for the problem. The Tower Problem is a classic
+> example of a problem that can be solved through space state representation.
+
 # Source code
 
 - [Source code](https://github.com/Csaba79-coder/MestIntSourceCode1) in C# provided by Gabor Kusper (Milton Friedman University)
