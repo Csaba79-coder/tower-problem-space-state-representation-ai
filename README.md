@@ -13,6 +13,7 @@
 ## Solution
 
 - in Java 20 maven based project
+- [Plan & Extra info](doc/planning.txt)
 
 # Source code
 

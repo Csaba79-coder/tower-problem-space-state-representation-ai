@@ -1,0 +1,21 @@
+1. extend the abstract state
+
+2. override the methods in the child class that extends the abstract class
+
+    2.1 Define the starting state -> constructor
+
+    2.2 Define the goal state -> override the isGoal method
+
+    2.3 Count the number of operations -> override the getOperatorCount() method
+
+    2.4 Define the operators -> override the isSuperOperator(int i) method (using switch case with the operator number &
+       lambda expressions)
+
+
+    Extra / not necessary to override:
+
+    2.5. Clone method needs to be overridden in the child class if we use Array or ArrayList
+
+    2.6. Equals method needs to be overridden in the child class if I can get back to the same state of the object
+         by using the equals method -> this means a circle exists in the state space (this override is needed to avoid
+            infinite loops)
