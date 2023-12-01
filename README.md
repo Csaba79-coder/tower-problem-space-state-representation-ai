@@ -16,7 +16,7 @@
 
 # Source code
 
-- [Space State Representation Source Code](https://github.com/Csaba79-coder/MestIntSourceCode1) in C# provided by Gabor Kusper (Milton Friedman University)
+- [Space State Representation Core Implementation](https://github.com/Csaba79-coder/MestIntSourceCode1) in C# provided by Gabor Kusper (Milton Friedman University)
 
 # Task
 
