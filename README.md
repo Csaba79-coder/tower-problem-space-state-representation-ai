@@ -1,4 +1,4 @@
-# Space state representation - Artificial Intelligence - solving the tower of Hanoi problem
+# Space state representation - Artificial Intelligence - solving the tower problem
 
 ## Description
 
