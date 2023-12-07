@@ -3,6 +3,9 @@
 2. override the methods in the child class that extends the abstract class
 
     2.1 Define the starting state -> constructor
+        2.1.1 Define the weight of people and stone (as final!)
+        2.1.2 Define the starting weight of the basket (one side is 0 other side is 30 kg with the stone!)
+
 
     2.2 Define the goal state -> override the isGoal method
 
