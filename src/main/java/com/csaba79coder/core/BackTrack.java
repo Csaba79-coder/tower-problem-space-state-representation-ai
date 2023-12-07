@@ -1,4 +1,4 @@
-package com.csaba79coder.model;
+package com.csaba79coder.core;
 
 /**
  * A class implementing the Backtrack graph search algorithm.

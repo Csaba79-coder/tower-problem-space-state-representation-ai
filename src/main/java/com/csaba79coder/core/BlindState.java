@@ -1,4 +1,4 @@
-package com.csaba79coder.model;
+package com.csaba79coder.core;
 
 /**
  * The BlindState class is provided here for illustrative purposes only.

@@ -1,4 +1,4 @@
-package com.csaba79coder.model;
+package com.csaba79coder.core;
 
 import lombok.RequiredArgsConstructor;
 

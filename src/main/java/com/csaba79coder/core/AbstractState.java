@@ -1,4 +1,4 @@
-package com.csaba79coder.model;
+package com.csaba79coder.core;
 
 /**
  * The abstract base class for all state classes.
@@ -7,10 +7,13 @@ public abstract class AbstractState implements Cloneable {
 
     // Checks if the internal state is a state.
     protected abstract boolean isState();
+
     // Checks if the internal state is a goal state.
-    protected abstract boolean isGoalState();
+    public abstract boolean isGoalState();
+
     // Returns the number of operators available.
-    protected abstract int getOperatorCount();
+    public abstract int getOperatorCount();
+
     // Access all operators through the super operator.
     // Returns true if the i-th base operator can be applied to the internal state.
     // Call this method from a for loop, starting from 0 to the number of base operators.
@@ -21,7 +24,8 @@ public abstract class AbstractState implements Cloneable {
     //         System.out.println("The " + i + "th operator can be applied to the state " + state);
     //     }
     // }
-    protected abstract boolean isSuperOperator(int i);
+    public abstract boolean isSuperOperator(int i);
+
     // Clone method. This method is required because we may need to undo the effects of some operators.
     // The simplest way is to clone the state, apply the operator to the clone, and check for problems.
     // If there are no issues, the clone becomes the new state for further search.
