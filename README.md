@@ -35,3 +35,6 @@
 <br>
 
 [Hungarian description of the task](doc/task.adoc)
+
+
+![image](https://github.com/Csaba79-coder/tower-problem-space-state-representation-ai/assets/77699103/227011a9-d428-4c2a-ac18-923a5063a942)
