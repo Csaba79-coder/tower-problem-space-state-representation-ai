@@ -71,6 +71,8 @@ public class TowerState extends AbstractState {
             // TODO make instead of capacity simply the kilos as param (4 params first 2 represents one basket,
             //  second 2 represents the other basket)
             // TODO remove the Element model (as from size you can tell if it is a person or a stone)
+            // TODO define basket position as String "U" or "D" (call the constructor with 4 params
+            //  or maybe five (if you want to give the chance to modify the weight difference!)
             case 0 -> op(personUpCounter, personDownCounter, basketCapacity1, basketCapacity2);
             // if basket up 1 person goes down
             case 1 -> op(personUpCounter, personDownCounter, basketCapacity1, basketCapacity2);
