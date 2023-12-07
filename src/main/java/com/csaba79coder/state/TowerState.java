@@ -51,6 +51,7 @@ public class TowerState extends AbstractState {
 
     @Override
     public int getOperatorCount() {
+        // TODO update the number of operators regarding the variant of kilos ...
         // if basket up 1 stone goes down
         // if basket up 1 person goes down
         // if basket up 1 stone & 1 person goes up
