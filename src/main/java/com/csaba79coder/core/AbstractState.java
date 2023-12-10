@@ -6,7 +6,7 @@ package com.csaba79coder.core;
 public abstract class AbstractState implements Cloneable {
 
     // Checks if the internal state is a state.
-    protected abstract boolean isState();
+    protected abstract boolean isValidState();
 
     // Checks if the internal state is a goal state.
     public abstract boolean isGoalState();

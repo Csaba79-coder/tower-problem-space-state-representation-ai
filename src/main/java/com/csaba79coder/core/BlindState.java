@@ -24,7 +24,7 @@ public abstract class BlindState extends AbstractState {
         //
         // TODO: Add the code here!
         //
-        if (isState()) {
+        if (isValidState()) {
             return true;
         }
         // Otherwise, revert the state transition:
@@ -47,7 +47,7 @@ public abstract class BlindState extends AbstractState {
         //
         // TODO: Add the code here!
         //
-        if (isState()) return true;
+        if (isValidState()) return true;
         // Otherwise, revert the state transition:
         //
         // TODO: Add the code here!
@@ -70,7 +70,7 @@ public abstract class BlindState extends AbstractState {
         //
         // TODO: Add the code here!
         //
-        if (isState()) return true;
+        if (isValidState()) return true;
         // Otherwise, revert the state transition:
         //
         // TODO: Add the code here!

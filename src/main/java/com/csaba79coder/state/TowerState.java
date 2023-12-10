@@ -41,7 +41,7 @@ public class TowerState extends AbstractState {
 
 
     @Override
-    protected boolean isState() {
+    protected boolean isValidState() {
         return (personUpCounter > personDownCounter || personUpCounter == 0 && personDownCounter == 3) &&
                 (personDownCounter > personUpCounter || personDownCounter == 0 && personUpCounter == 3);
     }
@@ -138,7 +138,7 @@ public class TowerState extends AbstractState {
     }
 
     private boolean op(int weight1, int weight2, int weight3, int weight4) {
-        boolean isPreOp = preOp(weight1, weight2, weight3, weight4);
+        boolean isPreOp = checkPreCondition(weight1, weight2, weight3, weight4);
         if (!isPreOp) {
             return false;
         }
@@ -157,7 +157,8 @@ public class TowerState extends AbstractState {
         return false;
     }
 
-    private boolean preOp(int weight1, int weight2, int weight3, int weight4) {
+    // preOperator
+    private boolean checkPreCondition(int weight1, int weight2, int weight3, int weight4) {
         basketCapacity1 = new int[]{0, 0};
         basketCapacity2 = new int[]{0, 0};
         basketCapacity1 = fillTheBasket(weight1, weight2);
@@ -182,7 +183,8 @@ public class TowerState extends AbstractState {
         if (basketCapacity1.length > 2 || basketCapacity2.length > 2) {
             return false;
         }
-        return personUpCounter >= 0 && personUpCounter <= 3 && personDownCounter >= 0 && personDownCounter <= 3;
+
+        return !(personUpCounter >= 0 && personUpCounter <= 3 && personDownCounter >= 0 && personDownCounter <= 3);
     }
 
     private int[] fillTheBasket(int weight1, int weight2) {
