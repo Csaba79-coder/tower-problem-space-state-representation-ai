@@ -14,7 +14,7 @@ public class TowerProblemApp {
 
         System.out.println("Solving the Tower Problem.");
 
-        startNode = new Node(new TowerState());
+        startNode = new Node(new TowerState(78, 42, 36, 30, 6));
 
         System.out.println(startNode);
 
