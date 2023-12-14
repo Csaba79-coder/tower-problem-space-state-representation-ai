@@ -149,6 +149,7 @@ public class TowerState extends AbstractState {
             basketLocationLeft = "DOWN";
             basketLocationRight = "UP";
             // variációk, hogy mi alapján csökken a személyek száma és áttenni őket a listába, majd clone
+            // if - else if - else kivenni a fenti listából. betenni az alsóba átklónozni mindent! kosarat is!
 
         } else {
             basketLocationLeft = "UP";
@@ -159,36 +160,43 @@ public class TowerState extends AbstractState {
 
     // preOperator
     private boolean checkPreCondition(int weight1, int weight2, int weight3, int weight4) {
-        basketCapacity1 = new int[]{0, 0};
-        basketCapacity2 = new int[]{0, 0};
-        basketCapacity1 = fillTheBasket(weight1, weight2);
-        basketCapacity2 = fillTheBasket(weight3, weight4);
+        int[] basketCapacity1 = new int[]{0, 0};
+        int[] basketCapacity2 = new int[]{0, 0};
+
+        boolean fillBasketUp = fillTheBasket(weight1, weight2, upEntities, basketCapacity1);
+        boolean fillBasketDown = fillTheBasket(weight3, weight4, downEntities, basketCapacity2);
+
+        // Check if either basket couldn't be filled
+        if (!fillBasketUp || !fillBasketDown) {
+            return false;
+        }
 
         int sumBasket1 = Arrays.stream(basketCapacity1).sum();
         int sumBasket2 = Arrays.stream(basketCapacity2).sum();
-        // Check the weight difference between the baskets if person in the basket!
-        if (checkPersonInBasket(basketCapacity1, basketCapacity2)) {
-            // Check if the weight difference is not greater than 6 when either basket contains an item over 30
-            if (Math.abs(sumBasket1 - sumBasket2) > 6) {
-                return false;
-            }
-        }
-
         // Check sum of weights and individual weights in both baskets
         if ((0 <= sumBasket1 && sumBasket1 <= 120 && Arrays.stream(basketCapacity1).allMatch(weight -> 0 <= weight && weight <= 120)) &&
                 (0 <= sumBasket2 && sumBasket2 <= 120 && Arrays.stream(basketCapacity2).allMatch(weight -> 0 <= weight && weight <= 120))) {
             return false;
         }
 
-        if (basketCapacity1.length > 2 || basketCapacity2.length > 2) {
+        /*if (basketCapacity1.length > 2 || basketCapacity2.length > 2) {
             return false;
-        }
+        }*/
 
         return !(personUpCounter >= 0 && personUpCounter <= 3 && personDownCounter >= 0 && personDownCounter <= 3);
     }
 
-    private int[] fillTheBasket(int weight1, int weight2) {
-        return new int[]{weight1, weight2};
+    private boolean fillTheBasket(int weight1, int weight2, List<Integer> entities, int[] basket) {
+        boolean foundWeight1 = entities.contains(weight1);
+        boolean foundWeight2 = entities.contains(weight2);
+
+        if (foundWeight1 && foundWeight2) {
+            basket[0] = weight1;
+            basket[1] = weight2;
+            return true;  // Both weights found, basket filled successfully
+        } else {
+            return false;  // Either or both weights not found, basket not filled
+        }
     }
 
     // Checks whether there is an element in any of the baskets that is greater than thirty
