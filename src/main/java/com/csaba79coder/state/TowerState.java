@@ -5,6 +5,7 @@ import com.csaba79coder.core.AbstractState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TowerState extends AbstractState {
 
@@ -132,7 +133,6 @@ public class TowerState extends AbstractState {
             case 55 -> op(36, 78, 42, 30); // Parameters: 36, 78, 42, 30
             case 56 -> op(42, 78, 36, 30); // Parameters: 42, 78, 36, 30
             case 57 -> op(42, 36, 30, 78); // Parameters: 42, 36, 30, 78
-
             default -> false;
         };
     }
@@ -142,6 +142,16 @@ public class TowerState extends AbstractState {
         if (!isPreOp) {
             return false;
         }
+
+        // Create deep clones of the lists
+        List<Integer> upEntitiesBackup = deepCopy(upEntities);
+        List<Integer> downEntitiesBackup = deepCopy(downEntities);
+
+        int[] basketCapacity1Backup = deepCopy(basketCapacity1);
+        int[] basketCapacity2Backup = deepCopy(basketCapacity2);
+
+        // Create deep clones of the array
+
 
         TowerState backup = (TowerState) this.clone();
 
@@ -200,6 +210,18 @@ public class TowerState extends AbstractState {
             basketLocationLeft = "UP";
             basketLocationRight = "DOWN";
         }
+        if (isValidState()) {
+            return true;
+        }
+
+        personUpCounter = backup.personUpCounter;
+        personDownCounter = backup.personDownCounter;
+        basketLocationLeft = backup.basketLocationLeft;
+        basketLocationRight = backup.basketLocationRight;
+        upEntities = upEntitiesBackup;
+        downEntities = downEntitiesBackup;
+        basketCapacity1 = basketCapacity1Backup;
+        basketCapacity2 = basketCapacity2Backup;
         return false;
     }
 
@@ -242,6 +264,20 @@ public class TowerState extends AbstractState {
         } else {
             return false;  // Either or both weights not found, basket not filled
         }
+    }
+
+    // deep copy of the list
+    private List<Integer> deepCopy(List<Integer> original) {
+        return original
+                .stream()
+                .toList();
+    }
+
+    // deep copy of the array -> System.arraycopy is achieving the same result as the loop-based version!
+    private int[] deepCopy(int[] original) {
+        int[] copy = new int[original.length];
+        System.arraycopy(original, 0, copy, 0, original.length);
+        return copy;
     }
 
     // Checks whether there is an element in any of the baskets that is greater than thirty
