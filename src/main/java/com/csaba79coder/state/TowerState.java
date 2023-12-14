@@ -146,12 +146,57 @@ public class TowerState extends AbstractState {
         TowerState backup = (TowerState) this.clone();
 
         if (basketLocationLeft.equals("UP") && basketLocationRight.equals("DOWN")) {
+            if (upEntities.contains(weight1)) {
+                personUpCounter--;
+                personDownCounter++;
+                upEntities.remove(weight1);
+                downEntities.add(weight1);
+            }
+            if (upEntities.contains(weight2)) {
+                personUpCounter--;
+                personDownCounter++;
+                upEntities.remove(weight2);
+                downEntities.add(weight2);
+            }
+            if (downEntities.contains(weight3)) {
+                personDownCounter--;
+                personUpCounter++;
+                downEntities.remove(weight3);
+                upEntities.add(weight3);
+            }
+            if (downEntities.contains(weight4)) {
+                personDownCounter--;
+                personUpCounter++;
+                downEntities.remove(weight4);
+                upEntities.add(weight4);
+            }
             basketLocationLeft = "DOWN";
             basketLocationRight = "UP";
-            // variációk, hogy mi alapján csökken a személyek száma és áttenni őket a listába, majd clone
-            // if - else if - else kivenni a fenti listából. betenni az alsóba átklónozni mindent! kosarat is!
-
         } else {
+            if (downEntities.contains(weight1)) {
+                personDownCounter--;
+                personUpCounter++;
+                downEntities.remove(weight1);
+                upEntities.add(weight1);
+            }
+            if (downEntities.contains(weight2)) {
+                personDownCounter--;
+                personUpCounter++;
+                downEntities.remove(weight2);
+                upEntities.add(weight2);
+            }
+            if (upEntities.contains(weight3)) {
+                personUpCounter--;
+                personDownCounter++;
+                upEntities.remove(weight3);
+                downEntities.add(weight3);
+            }
+            if (upEntities.contains(weight4)) {
+                personUpCounter--;
+                personDownCounter++;
+                upEntities.remove(weight4);
+                downEntities.add(weight4);
+            }
             basketLocationLeft = "UP";
             basketLocationRight = "DOWN";
         }
