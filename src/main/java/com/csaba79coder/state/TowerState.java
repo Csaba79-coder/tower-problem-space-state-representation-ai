@@ -241,7 +241,7 @@ public class TowerState extends AbstractState {
     // TODO check the login in preOp!
     // preOperator
     private boolean checkPreCondition(int weight1, int weight2, int weight3, int weight4) {
-
+        // TODO checkPersonInBasket() is not used!
         boolean fillBasketUp = fillTheBasket(weight1, weight2, upEntities, basketCapacity1);
         boolean fillBasketDown = fillTheBasket(weight3, weight4, downEntities, basketCapacity2);
 
