@@ -36,8 +36,8 @@ public class TowerState extends AbstractState {
         this.basketLocationRight = "DOWN";
         this.basketCapacity1 = new int[2];
         this.basketCapacity2 = new int[]{0, 30};
-        this.upEntities = new ArrayList<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3, 0));
-        this.downEntities = new ArrayList<>(List.of(this.stoneWeight, 0, 0, 0));
+        this.upEntities = new ArrayList<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3, 0, 0, 0));
+        this.downEntities = new ArrayList<>(List.of(this.stoneWeight, 0, 0, 0, 0, 0));
     }
 
 
@@ -69,83 +69,129 @@ public class TowerState extends AbstractState {
         // means -> case both side empty
         // one side 1 element, other is empty (all combination) -> 1 operator
         // one side 2 element, other is empty (all combination) -> 10 operator
-        return 58;
+        return 117;
     }
 
-    // TODO Check if all cases are here! (using excel!)
-    @Override
     public boolean isSuperOperator(int i) {
         return switch (i) {
-            // both sides zero
-            case 0 -> op(0, 0, 0, 0); // Parameters: 0, 0, 0, 0
+            case 0 -> op(0, 0, 0, 0);    // Parameters: 0, 0, 0, 0
+            case 1 -> op(0, 0, 0, 30);   // Parameters: 0, 0, 0, 30
+            case 2 -> op(0, 0, 0, 78);   // Parameters: 0, 0, 0, 78
+            case 3 -> op(0, 0, 0, 42);   // Parameters: 0, 0, 0, 42
+            case 4 -> op(0, 0, 0, 36);   // Parameters: 0, 0, 0, 36
+            case 5 -> op(30, 0, 0, 0);   // Parameters: 30, 0, 0, 0
+            case 6 -> op(36, 0, 0, 0);   // Parameters: 36, 0, 0, 0
+            case 7 -> op(42, 0, 0, 0);   // Parameters: 42, 0, 0, 0
+            case 8 -> op(78, 0, 0, 0);   // Parameters: 78, 0, 0, 0
+            case 9 -> op(0, 36, 0, 30);  // Parameters: 0, 36, 0, 30
+            case 10 -> op(0, 42, 0, 30); // Parameters: 0, 42, 0, 30
+            case 11 -> op(0, 78, 0, 30); // Parameters: 0, 78, 0, 30
+            case 12 -> op(0, 30, 0, 36); // Parameters: 0, 30, 0, 36
+            case 13 -> op(0, 30, 0, 42); // Parameters: 0, 30, 0, 42
+            case 14 -> op(0, 30, 0, 78); // Parameters: 0, 30, 0, 78
+            case 15 -> op(0, 30, 0, 36); // Parameters: 0, 30, 0, 36
+            case 16 -> op(0, 42, 0, 36); // Parameters: 0, 42, 0, 36
+            case 17 -> op(0, 78, 0, 36); // Parameters: 0, 78, 0, 36
+            case 18 -> op(0, 36, 0, 30); // Parameters: 0, 36, 0, 30
+            case 19 -> op(0, 36, 0, 42); // Parameters: 0, 36, 0, 42
+            case 20 -> op(0, 36, 0, 78); // Parameters: 0, 36, 0, 78
+            case 21 -> op(0, 30, 0, 42); // Parameters: 0, 30, 0, 42
+            case 22 -> op(0, 36, 0, 42); // Parameters: 0, 36, 0, 42
+            case 23 -> op(0, 78, 0, 42); // Parameters: 0, 78, 0, 42
+            case 24 -> op(0, 42, 0, 30); // Parameters: 0, 42, 0, 30
+            case 25 -> op(0, 42, 0, 36); // Parameters: 0, 42, 0, 36
+            case 26 -> op(0, 42, 0, 78); // Parameters: 0, 42, 0, 78
+            case 27 -> op(0, 30, 0, 78); // Parameters: 0, 30, 0, 78
+            case 28 -> op(0, 36, 0, 78); // Parameters: 0, 36, 0, 78
+            case 29 -> op(0, 42, 0, 78); // Parameters: 0, 42, 0, 78
+            case 30 -> op(0, 78, 0, 30); // Parameters: 0, 78, 0, 30
+            case 31 -> op(0, 78, 0, 36); // Parameters: 0, 78, 0, 36
+            case 32 -> op(0, 78, 0, 42); // Parameters: 0, 78, 0, 42
+            case 33 -> op(0, 0, 30, 36); // Parameters: 0, 0, 30, 36
+            case 34 -> op(0, 0, 30, 42); // Parameters: 0, 0, 30, 42
+            case 35 -> op(0, 0, 30, 78); // Parameters: 0, 0, 30, 78
+            case 36 -> op(0, 0, 36, 30); // Parameters: 0, 0, 36, 30
+            case 37 -> op(0, 0, 36, 42); // Parameters: 0, 0, 36, 42
+            case 38 -> op(0, 0, 36, 78); // Parameters: 0, 0, 36, 78
+            case 39 -> op(0, 0, 42, 30); // Parameters: 0, 0, 42, 30
+            case 40 -> op(0, 0, 42, 36); // Parameters: 0, 0, 42, 36
+            case 41 -> op(0, 0, 42, 78); // Parameters: 0, 0, 42, 78
+            case 42 -> op(0, 0, 78, 30); // Parameters: 0, 0, 78, 30
+            case 43 -> op(0, 0, 78, 36); // Parameters: 0, 0, 78, 36
+            case 44 -> op(0, 0, 78, 42); // Parameters: 0, 0, 78, 42
+            case 45 -> op(30, 36, 0, 0); // Parameters: 30, 36, 0, 0
+            case 46 -> op(30, 42, 0, 0); // Parameters: 30, 42, 0, 0
+            case 47 -> op(30, 78, 0, 0); // Parameters: 30, 78, 0, 0
+            case 48 -> op(36, 30, 0, 0); // Parameters: 36, 30, 0, 0
+            case 49 -> op(36, 42, 0, 0); // Parameters: 36, 42, 0, 0
+            case 50 -> op(36, 78, 0, 0); // Parameters: 36, 78, 0, 0
+            case 51 -> op(42, 30, 0, 0); // Parameters: 42, 30, 0, 0
+            case 52 -> op(42, 36, 0, 0); // Parameters: 42, 36, 0, 0
+            case 53 -> op(42, 78, 0, 0); // Parameters: 42, 78, 0, 0
+            case 54 -> op(78, 30, 0, 0); // Parameters: 78, 30, 0, 0
+            case 55 -> op(78, 36, 0, 0); // Parameters: 78, 36, 0, 0
+            case 56 -> op(78, 42, 0, 0); // Parameters: 78, 42, 0, 0
+            case 57 -> op(42, 0, 30, 36); // Parameters: 42, 0, 30, 36
+            case 58 -> op(78, 0, 30, 36); // Parameters: 78, 0, 30, 36
+            case 59 -> op(36, 0, 30, 42); // Parameters: 36, 0, 30, 42
+            case 60 -> op(78, 0, 30, 42); // Parameters: 78, 0, 30, 42
+            case 61 -> op(36, 0, 30, 78); // Parameters: 36, 0, 30, 78
+            case 62 -> op(42, 0, 30, 78); // Parameters: 42, 0, 30, 78
+            case 63 -> op(30, 36, 42, 0); // Parameters: 30, 36, 42, 0
+            case 64 -> op(30, 36, 78, 0); // Parameters: 30, 36, 78, 0
+            case 65 -> op(30, 42, 36, 0); // Parameters: 30, 42, 36, 0
+            case 66 -> op(30, 42, 78, 0); // Parameters: 30, 42, 78, 0
+            case 67 -> op(30, 78, 36, 0); // Parameters: 30, 78, 36, 0
+            case 68 -> op(30, 78, 42, 0); // Parameters: 30, 78, 42, 0
+            case 69 -> op(42, 0, 36, 30); // Parameters: 42, 0, 36, 30
+            case 70 -> op(78, 0, 36, 30); // Parameters: 78, 0, 36, 30
+            case 71 -> op(30, 0, 36, 42); // Parameters: 30, 0, 36, 42
+            case 72 -> op(78, 0, 36, 42); // Parameters: 78, 0, 36, 42
+            case 73 -> op(30, 0, 36, 78); // Parameters: 30, 0, 36, 78
+            case 74 -> op(42, 0, 36, 78); // Parameters: 42, 0, 36, 78
+            case 75 -> op(36, 30, 42, 0); // Parameters: 36, 30, 42, 0
+            case 76 -> op(36, 30, 78, 0); // Parameters: 36, 30, 78, 0
+            case 77 -> op(36, 42, 30, 0); // Parameters: 36, 42, 30, 0
+            case 78 -> op(36, 42, 78, 0); // Parameters: 36, 42, 78, 0
+            case 79 -> op(36, 78, 30, 0); // Parameters: 36, 78, 30, 0
+            case 80 -> op(36, 78, 42, 0); // Parameters: 36, 78, 42, 0
+            case 81 -> op(78, 0, 42, 30); // Parameters: 78, 0, 42, 30
+            case 82 -> op(36, 0, 42, 30); // Parameters: 36, 0, 42, 30
+            case 83 -> op(30, 0, 42, 36); // Parameters: 30, 0, 42, 36
+            case 84 -> op(78, 0, 42, 36); // Parameters: 78, 0, 42, 36
+            case 85 -> op(30, 0, 42, 78); // Parameters: 30, 0, 42, 78
+            case 86 -> op(36, 0, 42, 78); // Parameters: 36, 0, 42, 78
+            case 87 -> op(36, 0, 78, 30); // Parameters: 36, 0, 78, 30
+            case 88 -> op(42, 0, 78, 30); // Parameters: 42, 0, 78, 30
+            case 89 -> op(30, 0, 78, 36); // Parameters: 30, 0, 78, 36
+            case 90 -> op(42, 0, 78, 36); // Parameters: 42, 0, 78, 36
+            case 91 -> op(30, 0, 78, 42); // Parameters: 30, 0, 78, 42
+            case 92 -> op(36, 0, 78, 42); // Parameters: 36, 0, 78, 42
+            case 93 -> op(42, 78, 30, 36); // Parameters: 42, 78, 30, 36
+            case 94 -> op(36, 78, 30, 42); // Parameters: 36, 78, 30, 42
+            case 95 -> op(36, 42, 30, 78); // Parameters: 36, 42, 30, 78
+            case 96 -> op(42, 78, 36, 30); // Parameters: 42, 78, 36, 30
+            case 97 -> op(30, 78, 36, 42); // Parameters: 30, 78, 36, 42
+            case 98 -> op(30, 42, 36, 78); // Parameters: 30, 42, 36, 78
+            case 99 -> op(36, 78, 42, 30); // Parameters: 36, 78, 42, 30
+            case 100 -> op(30, 78, 42, 36); // Parameters: 30, 78, 42, 36
+            case 101 -> op(30, 36, 42, 78); // Parameters: 30, 36, 42, 78
+            case 102 -> op(36, 42, 78, 30); // Parameters: 36, 42, 78, 30
+            case 103 -> op(30, 42, 78, 36); // Parameters: 30, 42, 78, 36
+            case 104 -> op(30, 36, 78, 42); // Parameters: 30, 36, 78, 42
+            case 105 -> op(30, 36, 42, 78); // Parameters: 30, 36, 42, 78
+            case 106 -> op(30, 42, 36, 78); // Parameters: 30, 42, 36, 78
+            case 107 -> op(30, 78, 36, 42); // Parameters: 30, 78, 36, 42
+            case 108 -> op(36, 30, 42, 78); // Parameters: 36, 30, 42, 78
+            case 109 -> op(36, 42, 30, 78); // Parameters: 36, 42, 30, 78
+            case 110 -> op(36, 78, 30, 42); // Parameters: 36, 78, 30, 42
+            case 111 -> op(42, 30, 36, 78); // Parameters: 42, 30, 36, 78
+            case 112 -> op(42, 36, 30, 78); // Parameters: 42, 36, 30, 78
+            case 113 -> op(42, 78, 30, 36); // Parameters: 42, 78, 30, 36
+            case 114 -> op(78, 30, 36, 42); // Parameters: 78, 30, 36, 42
+            case 115 -> op(78, 36, 30, 42); // Parameters: 78, 36, 30, 42
+            case 116 -> op(78, 42, 30, 36); // Parameters: 78, 42, 30, 36
 
-            // one side empty, other one (all combinations)
-            case 1 -> op(0, 0, 0, 30); // Parameters: 0, 0, 0, 30
-            case 2 -> op(0, 0, 0, 78); // Parameters: 0, 0, 0, 78
-            case 3 -> op(0, 0, 0, 42); // Parameters: 0, 0, 0, 42
-            case 4 -> op(0, 0, 0, 36); // Parameters: 0, 0, 0, 36
-
-            // one side empty, other two (all combinations)
-            case 5 -> op(0, 0, 78, 30); // Parameters: 0, 0, 78, 30
-            case 6 -> op(0, 0, 78, 42); // Parameters: 0, 0, 78, 42
-            case 7 -> op(0, 0, 78, 36); // Parameters: 0, 0, 78, 36
-            case 8 -> op(0, 0, 42, 30); // Parameters: 0, 0, 42, 30
-            case 9 -> op(0, 0, 42, 36); // Parameters: 0, 0, 42, 36
-            case 10 -> op(0, 0, 36, 30); // Parameters: 0, 0, 36, 30
-
-            // other side empty, other 1 (all combinations)
-            case 11 -> op(30, 0, 0, 0); // Parameters: 30, 0, 0, 0
-            case 12 -> op(78, 0, 0, 0); // Parameters: 78, 0, 0, 0
-            case 13 -> op(42, 0, 0, 0); // Parameters: 42, 0, 0, 0
-            case 14 -> op(36, 0, 0, 0); // Parameters: 36, 0, 0, 0
-
-            // TODO check all cases!!! maybe not included!!!
-            // case 59 -> op(36, 0, 0, 30); // Parameters: 0, 0, 0, 0
-
-
-            // other side empty, other two (all combinations)
-            case 15 -> op(78, 30, 0, 0); // Parameters: 78, 30, 0, 0
-            case 16 -> op(78, 42, 0, 0); // Parameters: 78, 42, 0, 0
-            case 17 -> op(78, 36, 0, 0); // Parameters: 78, 36, 0, 0
-            case 18 -> op(42, 30, 0, 0); // Parameters: 42, 30, 0, 0
-            case 19 -> op(42, 36, 0, 0); // Parameters: 42, 36, 0, 0
-            case 20 -> op(36, 30, 0, 0); // Parameters: 36, 30, 0, 0
-
-            // one side one element, other two (all combinations)
-            case 21 -> op(0, 78, 42, 36); // Parameters: 0, 78, 42, 36
-            case 22 -> op(0, 78, 36, 30); // Parameters: 0, 78, 36, 30
-            case 23 -> op(0, 42, 78, 36); // Parameters: 0, 42, 78, 36
-            case 24 -> op(0, 42, 36, 30); // Parameters: 0, 42, 36, 30
-            case 25 -> op(0, 36, 78, 42); // Parameters: 0, 36, 78, 42
-            case 26 -> op(0, 36, 42, 30); // Parameters: 0, 36, 42, 30
-            case 27 -> op(0, 30, 78, 42); // Parameters: 0, 30, 78, 42
-            case 28 -> op(0, 30, 42, 36); // Parameters: 0, 30, 42, 36
-
-            // other side one element, other two (all combinations)
-            case 29 -> op(42, 36, 0, 78); // Parameters: 42, 36, 0, 78
-            case 30 -> op(36, 30, 0, 78); // Parameters: 36, 30, 0, 78
-            case 31 -> op(78, 36, 0, 42); // Parameters: 78, 36, 0, 42
-            case 32 -> op(36, 30, 0, 42); // Parameters: 36, 30, 0, 42
-            case 33 -> op(78, 42, 0, 36); // Parameters: 78, 42, 0, 36
-            case 34 -> op(42, 30, 0, 36); // Parameters: 42, 30, 0, 36
-            case 35 -> op(78, 42, 0, 30); // Parameters: 78, 42, 0, 30
-            case 36 -> op(42, 36, 0, 30); // Parameters: 42, 36, 0, 30
-
-            // both sides two elements (all combinations)
-            case 37 -> op(78, 42, 36, 30); // Parameters: 78, 42, 36, 30
-            case 38 -> op(78, 30, 36, 42); // Parameters: 78, 30, 36, 42
-            case 39 -> op(78, 36, 30, 42); // Parameters: 78, 36, 30, 42
-            case 40 -> op(42, 36, 30, 78); // Parameters: 42, 36, 30, 78
-            case 41 -> op(42, 30, 36, 78); // Parameters: 42, 30, 36, 78
-            case 42 -> op(36, 30, 42, 78); // Parameters: 36, 30, 42, 78
-            case 50 -> op(30, 78, 42, 36); // Parameters: 30, 78, 42, 36
-            case 51 -> op(36, 30, 78, 42); // Parameters: 36, 30, 78, 42
-            case 52 -> op(36, 42, 78, 30); // Parameters: 36, 42, 78, 30
-            case 53 -> op(30, 42, 78, 36); // Parameters: 30, 42, 78, 36
-            case 54 -> op(30, 78, 42, 36); // Parameters: 30, 78, 42, 36
-            case 55 -> op(36, 78, 42, 30); // Parameters: 36, 78, 42, 30
-            case 56 -> op(42, 78, 36, 30); // Parameters: 42, 78, 36, 30
-            case 57 -> op(42, 36, 30, 78); // Parameters: 42, 36, 30, 78
             default -> false;
         };
     }
