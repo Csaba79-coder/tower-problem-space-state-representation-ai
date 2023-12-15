@@ -5,6 +5,7 @@ import com.csaba79coder.core.AbstractState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class TowerState extends AbstractState {
 
@@ -309,7 +310,27 @@ public class TowerState extends AbstractState {
                 Arrays.stream(basketCapacity2).anyMatch(value -> value > 30);
     }
 
-    // TODO use equals method to avoid infinite loop (in child must be implemented!)
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        TowerState otherState = (TowerState) obj;
+
+        return personWeightPerson1 == otherState.personWeightPerson1 &&
+                personWeightPerson2 == otherState.personWeightPerson2 &&
+                personWeightPerson3 == otherState.personWeightPerson3 &&
+                stoneWeight == otherState.stoneWeight &&
+                basketWeightDifference == otherState.basketWeightDifference &&
+                personUpCounter == otherState.personUpCounter &&
+                personDownCounter == otherState.personDownCounter &&
+                Objects.equals(basketLocationLeft, otherState.basketLocationLeft) &&
+                Objects.equals(basketLocationRight, otherState.basketLocationRight) &&
+                Arrays.equals(basketCapacity1, otherState.basketCapacity1) &&
+                Arrays.equals(basketCapacity2, otherState.basketCapacity2) &&
+                Objects.equals(upEntities, otherState.upEntities) &&
+                Objects.equals(downEntities, otherState.downEntities);
+    }
 
     @Override
     public Object clone() {
