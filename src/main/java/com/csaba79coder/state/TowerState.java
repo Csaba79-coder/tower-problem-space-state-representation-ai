@@ -5,7 +5,6 @@ import com.csaba79coder.core.AbstractState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TowerState extends AbstractState {
 
@@ -35,16 +34,24 @@ public class TowerState extends AbstractState {
         this.basketLocationLeft = "UP";
         this.basketLocationRight = "DOWN";
         this.basketCapacity1 = new int[2];
-        this.basketCapacity2 = new int[]{0, this.stoneWeight};
-        this.upEntities = new ArrayList<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3));
-        this.downEntities = new ArrayList<>(List.of(this.stoneWeight));
+        this.basketCapacity2 = new int[]{0, 30};
+        this.upEntities = new ArrayList<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3, 0));
+        this.downEntities = new ArrayList<>(List.of(this.stoneWeight, 0, 0, 0));
     }
 
 
-    @Override
+    /*@Override
     protected boolean isValidState() {
         return (personUpCounter > personDownCounter || personUpCounter == 0 && personDownCounter == 3) &&
                 (personDownCounter > personUpCounter || personDownCounter == 0 && personUpCounter == 3);
+    }*/
+
+    // isState
+    @Override
+    protected boolean isValidState() {
+        return (personUpCounter <= 3 && personDownCounter <= 3 &&
+                (personUpCounter == 3 || personDownCounter == 3 || personUpCounter == 0 || personDownCounter == 0)) &&
+                (personUpCounter > personDownCounter || personDownCounter > personUpCounter);
     }
 
     @Override
@@ -64,6 +71,7 @@ public class TowerState extends AbstractState {
         return 58;
     }
 
+    // TODO Check if all cases are here! (using excel!)
     @Override
     public boolean isSuperOperator(int i) {
         return switch (i) {
@@ -89,6 +97,10 @@ public class TowerState extends AbstractState {
             case 12 -> op(78, 0, 0, 0); // Parameters: 78, 0, 0, 0
             case 13 -> op(42, 0, 0, 0); // Parameters: 42, 0, 0, 0
             case 14 -> op(36, 0, 0, 0); // Parameters: 36, 0, 0, 0
+
+            // TODO check all cases!!! maybe not included!!!
+            // case 59 -> op(36, 0, 0, 30); // Parameters: 0, 0, 0, 0
+
 
             // other side empty, other two (all combinations)
             case 15 -> op(78, 30, 0, 0); // Parameters: 78, 30, 0, 0
@@ -137,6 +149,7 @@ public class TowerState extends AbstractState {
         };
     }
 
+    // TODO check the operator logic
     private boolean op(int weight1, int weight2, int weight3, int weight4) {
         boolean isPreOp = checkPreCondition(weight1, weight2, weight3, weight4);
         if (!isPreOp) {
@@ -225,10 +238,9 @@ public class TowerState extends AbstractState {
         return false;
     }
 
+    // TODO check the login in preOp!
     // preOperator
     private boolean checkPreCondition(int weight1, int weight2, int weight3, int weight4) {
-        int[] basketCapacity1 = new int[]{0, 0};
-        int[] basketCapacity2 = new int[]{0, 0};
 
         boolean fillBasketUp = fillTheBasket(weight1, weight2, upEntities, basketCapacity1);
         boolean fillBasketDown = fillTheBasket(weight3, weight4, downEntities, basketCapacity2);
@@ -266,17 +278,26 @@ public class TowerState extends AbstractState {
         }
     }
 
-    // deep copy of the list
-    private List<Integer> deepCopy(List<Integer> original) {
-        return original
-                .stream()
-                .toList();
+    // Helper method to deep copy an array of mutable objects
+    private int[] deepCopy(int[] original) {
+        int[] copy = Arrays.copyOf(original, original.length);
+
+        for (int i = 0; i < original.length; i++) {
+            // Assuming Integer is used, replace with the actual class of mutable objects
+            copy[i] = Integer.valueOf(original[i]);
+            // Perform additional deep copy logic if necessary for mutable objects in the array
+        }
+        return copy;
     }
 
-    // deep copy of the array -> System.arraycopy is achieving the same result as the loop-based version!
-    private int[] deepCopy(int[] original) {
-        int[] copy = new int[original.length];
-        System.arraycopy(original, 0, copy, 0, original.length);
+    // Helper method to deep copy a list of mutable objects
+    private List<Integer> deepCopy(List<Integer> original) {
+        List<Integer> copy = new ArrayList<>(original.size());
+        for (Integer element : original) {
+            // Assuming Integer is used, replace with the actual class of mutable objects
+            copy.add(Integer.valueOf(element));
+            // Perform additional deep copy logic if necessary for mutable objects in the list
+        }
         return copy;
     }
 
@@ -288,16 +309,21 @@ public class TowerState extends AbstractState {
                 Arrays.stream(basketCapacity2).anyMatch(value -> value > 30);
     }
 
+    // TODO use equals method to avoid infinite loop (in child must be implemented!)
+
     @Override
     public Object clone() {
-        TowerState towerClone = (TowerState) super.clone();
+        TowerState clonedState = (TowerState) super.clone();
 
-        // Add your additional cloning or initialization logic here
-        towerClone.personUpCounter = this.personUpCounter;
-        towerClone.personDownCounter = this.personDownCounter;
-        towerClone.upEntities = new ArrayList<>(this.upEntities);
+        // Deep copy arrays with mutable objects
+        clonedState.basketCapacity1 = deepCopy(this.basketCapacity1);
+        clonedState.basketCapacity2 = deepCopy(this.basketCapacity2);
 
-        return towerClone;
+        // Deep copy lists with mutable objects
+        clonedState.upEntities = deepCopy(this.upEntities);
+        clonedState.downEntities = deepCopy(this.downEntities);
+
+        return clonedState;
     }
 
     public int getPersonWeightPerson1() {
