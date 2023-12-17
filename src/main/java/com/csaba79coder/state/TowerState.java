@@ -272,7 +272,7 @@ public class TowerState extends AbstractState implements Cloneable {
     }
 
     private int[] deepCopy(int[] original) {
-        // deep copy of array
+        // deep copy of array (shallow copy is sufficient for arrays with primitive values)
         return Arrays.copyOf(original, original.length);
     }
 
