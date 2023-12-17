@@ -34,9 +34,34 @@ public class TowerState extends AbstractState implements Cloneable {
 
     @Override
     protected boolean isValidState() {
-        Set<Integer> seenWeights = new HashSet<>();
+        // Check if at least one entity is up and one entity is down
+        boolean hasUp = false;
+        boolean hasDown = false;
 
         for (int weight : upEntities) {
+            if (weight > 0) {
+                hasUp = true;
+                break;
+            }
+        }
+
+        for (int weight : downEntities) {
+            if (weight > 0) {
+                hasDown = true;
+                break;
+            }
+        }
+
+        // Check if there is at least one item up and one item down, and the maximum is not exceeded
+        // All entities are down, it's still a valid state
+        return (hasUp && hasDown && upEntities.size() <= 5 && downEntities.size() <= 5) &&
+                checkDuplicates(upEntities) && checkDuplicates(downEntities);
+    }
+
+    private boolean checkDuplicates(Set<Integer> weights) {
+        Set<Integer> seenWeights = new HashSet<>();
+
+        for (int weight : weights) {
             if (weight > 0) {
                 if (seenWeights.contains(weight)) {
                     // Duplicate weight found, not a valid state
@@ -47,18 +72,6 @@ public class TowerState extends AbstractState implements Cloneable {
         }
 
         seenWeights.clear(); // Clear the set for the next iteration
-
-        for (int weight : downEntities) {
-            if (weight > 0) {
-                if (seenWeights.contains(weight)) {
-                    // Duplicate weight found, not a valid state
-                    return false;
-                }
-                seenWeights.add(weight);
-            }
-        }
-
-        // All weights are unique
         return true;
     }
 
@@ -208,6 +221,27 @@ public class TowerState extends AbstractState implements Cloneable {
         TowerState backup = (TowerState) clone();
 
         // Set weights in the baskets
+        this.basketCapacity1[0] = weight1;
+        this.basketCapacity1[1] = weight2;
+        this.basketCapacity2[0] = weight3;
+        this.basketCapacity2[1] = weight4;
+
+        // Remove weights from up list to down, and opposite
+        this.upEntities.remove(weight1);  // Remove by value, not index
+        this.upEntities.remove(weight2);
+        this.upEntities.add(weight3);
+        this.upEntities.add(weight4);
+        this.downEntities.remove(weight3);
+        this.downEntities.remove(weight4);
+        this.downEntities.add(weight1);
+        this.downEntities.add(weight2);
+
+        if (isGoalState()) {
+            return true;
+        }
+
+        /*
+        // Set weights in the baskets
         backup.basketCapacity1[0] = weight1;
         backup.basketCapacity1[1] = weight2;
         backup.basketCapacity2[0] = weight3;
@@ -225,7 +259,10 @@ public class TowerState extends AbstractState implements Cloneable {
 
         System.out.println(backup);
 
-        return backup.isValidState();
+        if (backup.isGoalState()) {
+            return true;
+         */
+        return false;
     }
 
     private boolean isPreOp(int weight1, int weight2, int weight3, int weight4) {
