@@ -66,7 +66,8 @@ public class TowerState extends AbstractState implements Cloneable {
     public boolean isGoalState() {
         return downEntities.contains(personWeightPerson1) &&
                 downEntities.contains(personWeightPerson2) &&
-                downEntities.contains(personWeightPerson3);
+                downEntities.contains(personWeightPerson3); // &&
+                //(upEntities.contains(stoneWeight) || (downEntities.contains(stoneWeight)));
     }
 
     @Override
