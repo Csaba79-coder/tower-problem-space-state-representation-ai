@@ -17,13 +17,13 @@ public class TowerProblemApp {
 
         startNode = new Node(new TowerState(78, 42, 36, 30, 6));
         System.out.println(startNode);
-        int limit = 100;
+        int limit = 1000;
         System.out.println("Using a depth-limited, memory-based backtrack search with a depth limit of " + limit +".");
         searcher = new BackTrack(startNode, limit, true);
         searcher.printSolution(searcher.search());
 
-        System.out.println("Solving tower state problem using depth-first search with cycle detection.");
+        /*System.out.println("Solving tower state problem using depth-first search with cycle detection.");
         searcher = new DepthFirstSearch(startNode, true);
-        searcher.printSolution(searcher.search());
+        searcher.printSolution(searcher.search());*/
     }
 }

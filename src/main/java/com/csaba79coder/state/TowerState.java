@@ -10,16 +10,15 @@ import java.util.*;
 @Setter
 public class TowerState extends AbstractState implements Cloneable {
 
-    int personWeightPerson1;
-    int personWeightPerson2;
-    int personWeightPerson3;
-    int stoneWeight;
-    int basketWeightDifference;
+    private int personWeightPerson1;
+    private int personWeightPerson2;
+    private int personWeightPerson3;
+    private int stoneWeight;
+    private int basketWeightDifference;
     private Set<Integer> upEntities;
     private Set<Integer> downEntities;
-
-    int[] basketCapacity1;
-    int[] basketCapacity2;
+    private int[] basketCapacity1;
+    private int[] basketCapacity2;
 
     public TowerState(int personWeightPerson1, int personWeightPerson2, int personWeightPerson3, int stoneWeight, int basketWeightDifference) {
         this.personWeightPerson1 = personWeightPerson1;
@@ -29,8 +28,8 @@ public class TowerState extends AbstractState implements Cloneable {
         this.basketWeightDifference = basketWeightDifference;
         this.basketCapacity1 = new int[2];
         this.basketCapacity2 = new int[]{0, 30};
-        this.upEntities = new HashSet<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3));
-        this.downEntities = new HashSet<>(List.of(this.stoneWeight));
+        this.upEntities = new HashSet<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3, 0));
+        this.downEntities = new HashSet<>(List.of(this.stoneWeight, 0));
     }
 
     @Override
@@ -207,7 +206,6 @@ public class TowerState extends AbstractState implements Cloneable {
 
         TowerState backup = (TowerState) clone();
 
-
         // Set weights in the baskets
         backup.basketCapacity1[0] = weight1;
         backup.basketCapacity1[1] = weight2;
@@ -237,20 +235,36 @@ public class TowerState extends AbstractState implements Cloneable {
 
         // Check if the sum of weight1 and weight2 or weight3 and weight4 is greater than 30
         if (weight1 + weight2 > 30 || weight3 + weight4 > 30) {
-            // Check if the absolute difference is equal to 6
-            if (!(Math.abs(weight1 + weight2 - (weight3 + weight4)) == 6)) {
+            // Check if the absolute difference is smaller or equal to 6
+            if (!(Math.abs(weight1 + weight2 - (weight3 + weight4)) <= 6)) {
                 // Your logic here if the conditions are met
                 return false;
             }
         }
 
+        // Check if all four weights are not in downEntities or upEntities
+        if ((!downEntities.contains(weight1) && !upEntities.contains(weight1)) &&
+                (!downEntities.contains(weight2) && !upEntities.contains(weight2)) &&
+                (!downEntities.contains(weight3) && !upEntities.contains(weight3)) &&
+                (!downEntities.contains(weight4) && !upEntities.contains(weight4))) {
+            // Set weights in both baskets
+            basketCapacity1[0] = weight1;
+            basketCapacity1[1] = weight2;
+            basketCapacity2[0] = weight3;
+            basketCapacity2[1] = weight4;
+
+            // Your additional logic here if needed
+
+            return false;
+        }
+        /*
         // Check if weight1 and weight2 are not in downEntities
         if (!downEntities.contains(weight1) && !downEntities.contains(weight2) && !upEntities.contains(weight1) && !upEntities.contains(weight2)) {
             // Set weights in the baskets
             basketCapacity1[0] = weight1;
             basketCapacity1[1] = weight2;
             return false;
-        }
+        }*/
 
         // Return true if none of the conditions were met
         return true;
@@ -311,16 +325,9 @@ public class TowerState extends AbstractState implements Cloneable {
 
     @Override
     public String toString() {
-        return "TowerState{" +
-                "personWeightPerson1=" + personWeightPerson1 +
-                ", personWeightPerson2=" + personWeightPerson2 +
-                ", personWeightPerson3=" + personWeightPerson3 +
-                ", stoneWeight=" + stoneWeight +
-                ", basketWeightDifference=" + basketWeightDifference + ", " + "\n" +
-                "upEntities=" + upEntities +
-                ", downEntities=" + downEntities +
-                ", basketCapacity1=" + Arrays.toString(basketCapacity1) +
-                ", basketCapacity2=" + Arrays.toString(basketCapacity2) +
-                '}' + "\n";
+        return "basketCapacity1=" + Arrays.toString(basketCapacity1) + "\n" +
+                "basketCapacity2=" + Arrays.toString(basketCapacity2) + "\n" +
+                "upEntities=" + upEntities + "\n" +
+                "downEntities=" + downEntities + "\n";
     }
 }
