@@ -1,25 +1,22 @@
 package com.csaba79coder.state;
 
 import com.csaba79coder.core.AbstractState;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-public class TowerState extends AbstractState {
+@Getter
+@Setter
+public class TowerState extends AbstractState implements Cloneable {
 
     int personWeightPerson1;
     int personWeightPerson2;
     int personWeightPerson3;
     int stoneWeight;
     int basketWeightDifference;
-    private int personUpCounter;
-    private int personDownCounter;
-    private String basketLocationLeft;
-    private String basketLocationRight;
-    private List<Integer> upEntities;
-    private List<Integer> downEntities;
+    private Set<Integer> upEntities;
+    private Set<Integer> downEntities;
 
     int[] basketCapacity1;
     int[] basketCapacity2;
@@ -30,48 +27,55 @@ public class TowerState extends AbstractState {
         this.personWeightPerson3 = personWeightPerson3;
         this.stoneWeight = stoneWeight;
         this.basketWeightDifference = basketWeightDifference;
-        this.personUpCounter = 3;
-        this.personDownCounter = 0;
-        this.basketLocationLeft = "UP";
-        this.basketLocationRight = "DOWN";
         this.basketCapacity1 = new int[2];
         this.basketCapacity2 = new int[]{0, 30};
-        this.upEntities = new ArrayList<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3, 0, 0, 0));
-        this.downEntities = new ArrayList<>(List.of(this.stoneWeight, 0, 0, 0, 0, 0));
+        this.upEntities = new HashSet<>(List.of(this.personWeightPerson1, this.personWeightPerson2, this.personWeightPerson3));
+        this.downEntities = new HashSet<>(List.of(this.stoneWeight));
     }
 
-
-    /*@Override
-    protected boolean isValidState() {
-        return (personUpCounter > personDownCounter || personUpCounter == 0 && personDownCounter == 3) &&
-                (personDownCounter > personUpCounter || personDownCounter == 0 && personUpCounter == 3);
-    }*/
-
-    // isState
     @Override
     protected boolean isValidState() {
-        return (personUpCounter <= 3 && personDownCounter <= 3 &&
-                (personUpCounter == 3 || personDownCounter == 3 || personUpCounter == 0 || personDownCounter == 0)) &&
-                (personUpCounter > personDownCounter || personDownCounter > personUpCounter);
+        Set<Integer> seenWeights = new HashSet<>();
+
+        for (int weight : upEntities) {
+            if (weight > 0) {
+                if (seenWeights.contains(weight)) {
+                    // Duplicate weight found, not a valid state
+                    return false;
+                }
+                seenWeights.add(weight);
+            }
+        }
+
+        seenWeights.clear(); // Clear the set for the next iteration
+
+        for (int weight : downEntities) {
+            if (weight > 0) {
+                if (seenWeights.contains(weight)) {
+                    // Duplicate weight found, not a valid state
+                    return false;
+                }
+                seenWeights.add(weight);
+            }
+        }
+
+        // All weights are unique
+        return true;
     }
 
     @Override
     public boolean isGoalState() {
-        return (personUpCounter == 0 && personDownCounter == 3);
+        return downEntities.contains(personWeightPerson1) &&
+                downEntities.contains(personWeightPerson2) &&
+                downEntities.contains(personWeightPerson3);
     }
 
-    // Regarding the task, the basket is not going by gravity, it is moved by a motor / manually!!!
-    // it means no matter what weight is in the basket, it can be moved up and down
     @Override
     public int getOperatorCount() {
-        // it is not working as gravitation, the rope is moved manually!!!
-        // elements position in basket does not matter!
-        // means -> case both side empty
-        // one side 1 element, other is empty (all combination) -> 1 operator
-        // one side 2 element, other is empty (all combination) -> 10 operator
         return 117;
     }
 
+    @Override
     public boolean isSuperOperator(int i) {
         return switch (i) {
             case 0 -> op(0, 0, 0, 0);    // Parameters: 0, 0, 0, 0
@@ -196,186 +200,60 @@ public class TowerState extends AbstractState {
         };
     }
 
-    // TODO check the operator logic
     private boolean op(int weight1, int weight2, int weight3, int weight4) {
-        boolean isPreOp = checkPreCondition(weight1, weight2, weight3, weight4);
-        if (!isPreOp) {
+        if (!isPreOp(weight1, weight2, weight3, weight4)) {
             return false;
         }
 
-        // Create deep clones of the lists
-        List<Integer> upEntitiesBackup = deepCopy(upEntities);
-        List<Integer> downEntitiesBackup = deepCopy(downEntities);
-
-        int[] basketCapacity1Backup = deepCopy(basketCapacity1);
-        int[] basketCapacity2Backup = deepCopy(basketCapacity2);
-
-        // Create deep clones of the array
+        TowerState backup = (TowerState) clone();
 
 
-        TowerState backup = (TowerState) this.clone();
+        // Set weights in the baskets
+        backup.basketCapacity1[0] = weight1;
+        backup.basketCapacity1[1] = weight2;
+        backup.basketCapacity2[0] = weight3;
+        backup.basketCapacity2[1] = weight4;
 
-        if (basketLocationLeft.equals("UP") && basketLocationRight.equals("DOWN")) {
-            if (upEntities.contains(weight1)) {
-                personUpCounter--;
-                personDownCounter++;
-                upEntities.remove(weight1);
-                downEntities.add(weight1);
-            }
-            if (upEntities.contains(weight2)) {
-                personUpCounter--;
-                personDownCounter++;
-                upEntities.remove(weight2);
-                downEntities.add(weight2);
-            }
-            if (downEntities.contains(weight3)) {
-                personDownCounter--;
-                personUpCounter++;
-                downEntities.remove(weight3);
-                upEntities.add(weight3);
-            }
-            if (downEntities.contains(weight4)) {
-                personDownCounter--;
-                personUpCounter++;
-                downEntities.remove(weight4);
-                upEntities.add(weight4);
-            }
-            basketLocationLeft = "DOWN";
-            basketLocationRight = "UP";
-        } else {
-            if (downEntities.contains(weight1)) {
-                personDownCounter--;
-                personUpCounter++;
-                downEntities.remove(weight1);
-                upEntities.add(weight1);
-            }
-            if (downEntities.contains(weight2)) {
-                personDownCounter--;
-                personUpCounter++;
-                downEntities.remove(weight2);
-                upEntities.add(weight2);
-            }
-            if (upEntities.contains(weight3)) {
-                personUpCounter--;
-                personDownCounter++;
-                upEntities.remove(weight3);
-                downEntities.add(weight3);
-            }
-            if (upEntities.contains(weight4)) {
-                personUpCounter--;
-                personDownCounter++;
-                upEntities.remove(weight4);
-                downEntities.add(weight4);
-            }
-            basketLocationLeft = "UP";
-            basketLocationRight = "DOWN";
-        }
-        if (isValidState()) {
-            return true;
-        }
+        // Remove weights from up list to down, and opposite
+        backup.upEntities.remove(weight1);  // Remove by value, not index
+        backup.upEntities.remove(weight2);
+        backup.upEntities.add(weight3);
+        backup.upEntities.add(weight4);
+        backup.downEntities.remove(weight3);
+        backup.downEntities.remove(weight4);
+        backup.downEntities.add(weight1);
+        backup.downEntities.add(weight2);
 
-        personUpCounter = backup.personUpCounter;
-        personDownCounter = backup.personDownCounter;
-        basketLocationLeft = backup.basketLocationLeft;
-        basketLocationRight = backup.basketLocationRight;
-        upEntities = upEntitiesBackup;
-        downEntities = downEntitiesBackup;
-        basketCapacity1 = basketCapacity1Backup;
-        basketCapacity2 = basketCapacity2Backup;
-        return false;
+        System.out.println(backup);
+
+        return backup.isValidState();
     }
 
-    // TODO check the login in preOp!
-    // preOperator
-    private boolean checkPreCondition(int weight1, int weight2, int weight3, int weight4) {
-        // TODO checkPersonInBasket() is not used!
-        boolean fillBasketUp = fillTheBasket(weight1, weight2, upEntities, basketCapacity1);
-        boolean fillBasketDown = fillTheBasket(weight3, weight4, downEntities, basketCapacity2);
-
-        // Check if either basket couldn't be filled
-        if (!fillBasketUp || !fillBasketDown) {
+    private boolean isPreOp(int weight1, int weight2, int weight3, int weight4) {
+        // Check if all weights are zero, in which case it's not a valid state
+        if (weight1 == 0 && weight2 == 0 && weight3 == 0 && weight4 == 0) {
             return false;
         }
 
-        int sumBasket1 = Arrays.stream(basketCapacity1).sum();
-        int sumBasket2 = Arrays.stream(basketCapacity2).sum();
-        // Check sum of weights and individual weights in both baskets
-        if ((0 <= sumBasket1 && sumBasket1 <= 120 && Arrays.stream(basketCapacity1).allMatch(weight -> 0 <= weight && weight <= 120)) &&
-                (0 <= sumBasket2 && sumBasket2 <= 120 && Arrays.stream(basketCapacity2).allMatch(weight -> 0 <= weight && weight <= 120))) {
+        // Check if the sum of weight1 and weight2 or weight3 and weight4 is greater than 30
+        if (weight1 + weight2 > 30 || weight3 + weight4 > 30) {
+            // Check if the absolute difference is equal to 6
+            if (!(Math.abs(weight1 + weight2 - (weight3 + weight4)) == 6)) {
+                // Your logic here if the conditions are met
+                return false;
+            }
+        }
+
+        // Check if weight1 and weight2 are not in downEntities
+        if (!downEntities.contains(weight1) && !downEntities.contains(weight2) && !upEntities.contains(weight1) && !upEntities.contains(weight2)) {
+            // Set weights in the baskets
+            basketCapacity1[0] = weight1;
+            basketCapacity1[1] = weight2;
             return false;
         }
 
-        /*if (basketCapacity1.length > 2 || basketCapacity2.length > 2) {
-            return false;
-        }*/
-
-        return !(personUpCounter >= 0 && personUpCounter <= 3 && personDownCounter >= 0 && personDownCounter <= 3);
-    }
-
-    private boolean fillTheBasket(int weight1, int weight2, List<Integer> entities, int[] basket) {
-        boolean foundWeight1 = entities.contains(weight1);
-        boolean foundWeight2 = entities.contains(weight2);
-
-        if (foundWeight1 && foundWeight2) {
-            basket[0] = weight1;
-            basket[1] = weight2;
-            return true;  // Both weights found, basket filled successfully
-        } else {
-            return false;  // Either or both weights not found, basket not filled
-        }
-    }
-
-    // Helper method to deep copy an array of mutable objects
-    private int[] deepCopy(int[] original) {
-        int[] copy = Arrays.copyOf(original, original.length);
-
-        for (int i = 0; i < original.length; i++) {
-            // Assuming Integer is used, replace with the actual class of mutable objects
-            copy[i] = Integer.valueOf(original[i]);
-            // Perform additional deep copy logic if necessary for mutable objects in the array
-        }
-        return copy;
-    }
-
-    // Helper method to deep copy a list of mutable objects
-    private List<Integer> deepCopy(List<Integer> original) {
-        List<Integer> copy = new ArrayList<>(original.size());
-        for (Integer element : original) {
-            // Assuming Integer is used, replace with the actual class of mutable objects
-            copy.add(Integer.valueOf(element));
-            // Perform additional deep copy logic if necessary for mutable objects in the list
-        }
-        return copy;
-    }
-
-    // Checks whether there is an element in any of the baskets that is greater than thirty
-    // in case yes, that means a person is in the basket!
-    private boolean checkPersonInBasket(int[] basketCapacity1, int[] basketCapacity2) {
-        // Check both baskets for an element greater than thirty
-        return Arrays.stream(basketCapacity1).anyMatch(value -> value > 30) ||
-                Arrays.stream(basketCapacity2).anyMatch(value -> value > 30);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        TowerState otherState = (TowerState) obj;
-
-        return personWeightPerson1 == otherState.personWeightPerson1 &&
-                personWeightPerson2 == otherState.personWeightPerson2 &&
-                personWeightPerson3 == otherState.personWeightPerson3 &&
-                stoneWeight == otherState.stoneWeight &&
-                basketWeightDifference == otherState.basketWeightDifference &&
-                personUpCounter == otherState.personUpCounter &&
-                personDownCounter == otherState.personDownCounter &&
-                Objects.equals(basketLocationLeft, otherState.basketLocationLeft) &&
-                Objects.equals(basketLocationRight, otherState.basketLocationRight) &&
-                Arrays.equals(basketCapacity1, otherState.basketCapacity1) &&
-                Arrays.equals(basketCapacity2, otherState.basketCapacity2) &&
-                Objects.equals(upEntities, otherState.upEntities) &&
-                Objects.equals(downEntities, otherState.downEntities);
+        // Return true if none of the conditions were met
+        return true;
     }
 
     @Override
@@ -393,92 +271,42 @@ public class TowerState extends AbstractState {
         return clonedState;
     }
 
-    public int getPersonWeightPerson1() {
-        return personWeightPerson1;
+    private int[] deepCopy(int[] original) {
+        // deep copy of array
+        return Arrays.copyOf(original, original.length);
     }
 
-    public void setPersonWeightPerson1(int personWeightPerson1) {
-        this.personWeightPerson1 = personWeightPerson1;
+    private Set<Integer> deepCopy(Set<Integer> original) {
+        // deep copy of Set
+        return original.stream()
+                .collect(HashSet::new, HashSet::add, HashSet::addAll);
     }
 
-    public int getPersonWeightPerson2() {
-        return personWeightPerson2;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        TowerState otherState = (TowerState) obj;
+
+        return personWeightPerson1 == otherState.personWeightPerson1 &&
+                personWeightPerson2 == otherState.personWeightPerson2 &&
+                personWeightPerson3 == otherState.personWeightPerson3 &&
+                stoneWeight == otherState.stoneWeight &&
+                basketWeightDifference == otherState.basketWeightDifference &&
+                Arrays.equals(basketCapacity1, otherState.basketCapacity1) &&
+                Arrays.equals(basketCapacity2, otherState.basketCapacity2) &&
+                Objects.equals(upEntities, otherState.upEntities) &&
+                Objects.equals(downEntities, otherState.downEntities);
     }
 
-    public void setPersonWeightPerson2(int personWeightPerson2) {
-        this.personWeightPerson2 = personWeightPerson2;
-    }
-
-    public int getPersonWeightPerson3() {
-        return personWeightPerson3;
-    }
-
-    public void setPersonWeightPerson3(int personWeightPerson3) {
-        this.personWeightPerson3 = personWeightPerson3;
-    }
-
-    public int getStoneWeight() {
-        return stoneWeight;
-    }
-
-    public void setStoneWeight(int stoneWeight) {
-        this.stoneWeight = stoneWeight;
-    }
-
-    public int getBasketWeightDifference() {
-        return basketWeightDifference;
-    }
-
-    public void setBasketWeightDifference(int basketWeightDifference) {
-        this.basketWeightDifference = basketWeightDifference;
-    }
-
-    public int getPersonUpCounter() {
-        return personUpCounter;
-    }
-
-    public void setPersonUpCounter(int personUpCounter) {
-        this.personUpCounter = personUpCounter;
-    }
-
-    public int getPersonDownCounter() {
-        return personDownCounter;
-    }
-
-    public void setPersonDownCounter(int personDownCounter) {
-        this.personDownCounter = personDownCounter;
-    }
-
-    public String getBasketLocationLeft() {
-        return basketLocationLeft;
-    }
-
-    public void setBasketLocationLeft(String basketLocationLeft) {
-        this.basketLocationLeft = basketLocationLeft;
-    }
-
-    public String getBasketLocationRight() {
-        return basketLocationRight;
-    }
-
-    public void setBasketLocationRight(String basketLocationRight) {
-        this.basketLocationRight = basketLocationRight;
-    }
-
-    public List<Integer> getUpEntities() {
-        return upEntities;
-    }
-
-    public void setUpEntities(List<Integer> upEntities) {
-        this.upEntities = upEntities;
-    }
-
-    public List<Integer> getDownEntities() {
-        return downEntities;
-    }
-
-    public void setDownEntities(List<Integer> downEntities) {
-        this.downEntities = downEntities;
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(super.hashCode(), personWeightPerson1, personWeightPerson2, personWeightPerson3, stoneWeight,
+                basketWeightDifference, upEntities, downEntities);
+        result = 31 * result + Arrays.hashCode(basketCapacity1);
+        result = 31 * result + Arrays.hashCode(basketCapacity2);
+        return result;
     }
 
     @Override
@@ -488,15 +316,11 @@ public class TowerState extends AbstractState {
                 ", personWeightPerson2=" + personWeightPerson2 +
                 ", personWeightPerson3=" + personWeightPerson3 +
                 ", stoneWeight=" + stoneWeight +
-                ", basketWeightDifference=" + basketWeightDifference +
-                ", personUpCounter=" + personUpCounter +
-                ", personDownCounter=" + personDownCounter +
-                ", basketLocationLeft='" + basketLocationLeft + '\'' +
-                ", basketLocationRight='" + basketLocationRight + '\'' +
-                ", upEntities=" + upEntities +
+                ", basketWeightDifference=" + basketWeightDifference + ", " + "\n" +
+                "upEntities=" + upEntities +
                 ", downEntities=" + downEntities +
                 ", basketCapacity1=" + Arrays.toString(basketCapacity1) +
                 ", basketCapacity2=" + Arrays.toString(basketCapacity2) +
-                '}';
+                '}' + "\n";
     }
 }
