@@ -257,14 +257,6 @@ public class TowerState extends AbstractState implements Cloneable {
 
             return false;
         }
-        /*
-        // Check if weight1 and weight2 are not in downEntities
-        if (!downEntities.contains(weight1) && !downEntities.contains(weight2) && !upEntities.contains(weight1) && !upEntities.contains(weight2)) {
-            // Set weights in the baskets
-            basketCapacity1[0] = weight1;
-            basketCapacity1[1] = weight2;
-            return false;
-        }*/
 
         // Return true if none of the conditions were met
         return true;
