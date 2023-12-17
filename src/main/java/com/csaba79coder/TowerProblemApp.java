@@ -17,8 +17,8 @@ public class TowerProblemApp {
 
         startNode = new Node(new TowerState(78, 42, 36, 30, 6));
         System.out.println(startNode);
-        int limit = 1000;
-        System.out.println("Using a depth-limited, memory-based backtrack search with a depth limit of " + limit +".");
+        int limit = 25;
+        System.out.println("Using a depth-limited, memory-based backtrack search with a depth limit of " + limit + ".");
         searcher = new BackTrack(startNode, limit, true);
         searcher.printSolution(searcher.search());
 

@@ -253,8 +253,6 @@ public class TowerState extends AbstractState implements Cloneable {
             basketCapacity2[0] = weight3;
             basketCapacity2[1] = weight4;
 
-            // Your additional logic here if needed
-
             return false;
         }
 
