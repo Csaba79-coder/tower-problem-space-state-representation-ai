@@ -39,14 +39,14 @@ public class TowerState extends AbstractState implements Cloneable {
         boolean hasDown = false;
 
         for (int weight : upEntities) {
-            if (weight > 0) {
+            if (weight >= 0) {
                 hasUp = true;
                 break;
             }
         }
 
         for (int weight : downEntities) {
-            if (weight > 0) {
+            if (weight >= 0) {
                 hasDown = true;
                 break;
             }
