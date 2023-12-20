@@ -55,10 +55,10 @@ public class TowerState extends AbstractState implements Cloneable {
         // Check if there is at least one item up and one item down, and the maximum is not exceeded
         // All entities are down, it's still a valid state
         return (hasUp && hasDown && upEntities.size() <= 5 && downEntities.size() <= 5) &&
-                checkDuplicates(upEntities) && checkDuplicates(downEntities);
+                hasDuplicates(upEntities) && hasDuplicates(downEntities);
     }
 
-    private boolean checkDuplicates(Set<Integer> weights) {
+    private boolean hasDuplicates(Set<Integer> weights) {
         Set<Integer> seenWeights = new HashSet<>();
 
         for (int weight : weights) {
@@ -220,27 +220,35 @@ public class TowerState extends AbstractState implements Cloneable {
 
         TowerState backup = (TowerState) clone();
 
-        // Set weights in the baskets
-        this.basketCapacity1[0] = weight1;
-        this.basketCapacity1[1] = weight2;
-        this.basketCapacity2[0] = weight3;
-        this.basketCapacity2[1] = weight4;
+        // Check if all four weights are not in downEntities or upEntities
+        if ((!downEntities.contains(weight1) && !upEntities.contains(weight1)) &&
+                (!downEntities.contains(weight2) && !upEntities.contains(weight2)) &&
+                (!downEntities.contains(weight3) && !upEntities.contains(weight3)) &&
+                (!downEntities.contains(weight4) && !upEntities.contains(weight4))) {
+            // Set weights in both baskets
+            this.basketCapacity1[0] = weight1;
+            this.basketCapacity1[1] = weight2;
+            this.basketCapacity2[0] = weight3;
+            this.basketCapacity2[1] = weight4;
 
-        // Remove weights from up list to down, and opposite
-        this.upEntities.remove(weight1);  // Remove by value, not index
-        this.upEntities.remove(weight2);
-        this.upEntities.add(weight3);
-        this.upEntities.add(weight4);
-        this.downEntities.remove(weight3);
-        this.downEntities.remove(weight4);
-        this.downEntities.add(weight1);
-        this.downEntities.add(weight2);
+            // Remove weights from up list to down, and opposite
+            this.upEntities.remove(weight1);  // Remove by value, not index
+            this.upEntities.remove(weight2);
+            this.upEntities.add(weight3);
+            this.upEntities.add(weight4);
+            this.downEntities.remove(weight3);
+            this.downEntities.remove(weight4);
+            this.downEntities.add(weight1);
+            this.downEntities.add(weight2);
+        }
+
+
 
         if (isGoalState()) {
             return true;
         }
 
-        /*
+
         // Set weights in the baskets
         backup.basketCapacity1[0] = weight1;
         backup.basketCapacity1[1] = weight2;
@@ -261,7 +269,7 @@ public class TowerState extends AbstractState implements Cloneable {
 
         if (backup.isGoalState()) {
             return true;
-         */
+        }
         return false;
     }
 
@@ -279,21 +287,6 @@ public class TowerState extends AbstractState implements Cloneable {
                 return false;
             }
         }
-
-        // Check if all four weights are not in downEntities or upEntities
-        if ((!downEntities.contains(weight1) && !upEntities.contains(weight1)) &&
-                (!downEntities.contains(weight2) && !upEntities.contains(weight2)) &&
-                (!downEntities.contains(weight3) && !upEntities.contains(weight3)) &&
-                (!downEntities.contains(weight4) && !upEntities.contains(weight4))) {
-            // Set weights in both baskets
-            basketCapacity1[0] = weight1;
-            basketCapacity1[1] = weight2;
-            basketCapacity2[0] = weight3;
-            basketCapacity2[1] = weight4;
-
-            return false;
-        }
-
         // Return true if none of the conditions were met
         return true;
     }
