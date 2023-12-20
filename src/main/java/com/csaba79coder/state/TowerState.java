@@ -19,6 +19,8 @@ public class TowerState extends AbstractState implements Cloneable {
     private Set<Integer> downEntities;
     private int[] basketCapacity1;
     private int[] basketCapacity2;
+    private String basketCapacity1Position = "UP";
+    private String basketCapacity2Position = "DOWN";
 
     public TowerState(int personWeightPerson1, int personWeightPerson2, int personWeightPerson3, int stoneWeight, int basketWeightDifference) {
         this.personWeightPerson1 = personWeightPerson1;
@@ -79,8 +81,8 @@ public class TowerState extends AbstractState implements Cloneable {
     public boolean isGoalState() {
         return downEntities.contains(personWeightPerson1) &&
                 downEntities.contains(personWeightPerson2) &&
-                downEntities.contains(personWeightPerson3); // &&
-                //(upEntities.contains(stoneWeight) || (downEntities.contains(stoneWeight)));
+                downEntities.contains(personWeightPerson3) &&
+                (upEntities.contains(stoneWeight) || (downEntities.contains(stoneWeight)));
     }
 
     @Override
@@ -220,11 +222,14 @@ public class TowerState extends AbstractState implements Cloneable {
 
         TowerState backup = (TowerState) clone();
 
+        // TODO maybe check which basket is up, and which is down, and regarding it, set the weights
         // Check if all four weights are not in downEntities or upEntities
-        if ((!downEntities.contains(weight1) && !upEntities.contains(weight1)) &&
-                (!downEntities.contains(weight2) && !upEntities.contains(weight2)) &&
-                (!downEntities.contains(weight3) && !upEntities.contains(weight3)) &&
-                (!downEntities.contains(weight4) && !upEntities.contains(weight4))) {
+        if (basketCapacity1Position.equalsIgnoreCase("UP") &&
+                basketCapacity2Position.equalsIgnoreCase("DOWN") &&
+                upEntities.contains(weight1) && upEntities.contains(weight2) &&
+                downEntities.contains(weight3) && downEntities.contains(weight4)) {
+            this.basketCapacity1Position = "DOWN";
+            this.basketCapacity2Position = "UP";
             // Set weights in both baskets
             this.basketCapacity1[0] = weight1;
             this.basketCapacity1[1] = weight2;
@@ -240,14 +245,29 @@ public class TowerState extends AbstractState implements Cloneable {
             this.downEntities.remove(weight4);
             this.downEntities.add(weight1);
             this.downEntities.add(weight2);
+        } else if (basketCapacity1Position.equalsIgnoreCase("DOWN") &&
+                basketCapacity2Position.equalsIgnoreCase("UP") &&
+                downEntities.contains(weight1) && downEntities.contains(weight2) &&
+                upEntities.contains(weight3) && upEntities.contains(weight4)) {
+            basketCapacity1Position = "UP";
+            basketCapacity2Position = "DOWN";
+            this.basketCapacity1[0] = weight1;
+            this.basketCapacity1[1] = weight2;
+            this.basketCapacity2[0] = weight3;
+            this.basketCapacity2[1] = weight4;
+            this.upEntities.remove(weight1);  // Remove by value, not index
+            this.upEntities.remove(weight2);
+            this.upEntities.add(weight3);
+            this.upEntities.add(weight4);
+            this.downEntities.remove(weight3);
+            this.downEntities.remove(weight4);
+            this.downEntities.add(weight1);
+            this.downEntities.add(weight2);
         }
-
-
 
         if (isGoalState()) {
             return true;
         }
-
 
         // Set weights in the baskets
         backup.basketCapacity1[0] = weight1;
@@ -265,11 +285,11 @@ public class TowerState extends AbstractState implements Cloneable {
         backup.downEntities.add(weight1);
         backup.downEntities.add(weight2);
 
+        backup.basketCapacity1Position = basketCapacity1Position;
+        backup.basketCapacity2Position = basketCapacity2Position;
+
         System.out.println(backup);
 
-        if (backup.isGoalState()) {
-            return true;
-        }
         return false;
     }
 
@@ -328,6 +348,8 @@ public class TowerState extends AbstractState implements Cloneable {
                 personWeightPerson2 == otherState.personWeightPerson2 &&
                 personWeightPerson3 == otherState.personWeightPerson3 &&
                 stoneWeight == otherState.stoneWeight &&
+                basketCapacity1Position.equalsIgnoreCase(otherState.basketCapacity1Position) &&
+                basketCapacity2Position.equalsIgnoreCase(otherState.basketCapacity2Position) &&
                 basketWeightDifference == otherState.basketWeightDifference &&
                 Arrays.equals(basketCapacity1, otherState.basketCapacity1) &&
                 Arrays.equals(basketCapacity2, otherState.basketCapacity2) &&
@@ -338,7 +360,7 @@ public class TowerState extends AbstractState implements Cloneable {
     @Override
     public int hashCode() {
         int result = Objects.hash(super.hashCode(), personWeightPerson1, personWeightPerson2, personWeightPerson3, stoneWeight,
-                basketWeightDifference, upEntities, downEntities);
+                basketWeightDifference, upEntities, downEntities, basketCapacity1Position, basketCapacity2Position);
         result = 31 * result + Arrays.hashCode(basketCapacity1);
         result = 31 * result + Arrays.hashCode(basketCapacity2);
         return result;
@@ -346,8 +368,8 @@ public class TowerState extends AbstractState implements Cloneable {
 
     @Override
     public String toString() {
-        return "basketCapacity1=" + Arrays.toString(basketCapacity1) + "\n" +
-                "basketCapacity2=" + Arrays.toString(basketCapacity2) + "\n" +
+        return "basketCapacity1=" + Arrays.toString(basketCapacity1) + " position: " + basketCapacity1Position +"\n" +
+                "basketCapacity2=" + Arrays.toString(basketCapacity2) + " position: " + basketCapacity2Position+ "\n" +
                 "upEntities=" + upEntities + "\n" +
                 "downEntities=" + downEntities + "\n";
     }
