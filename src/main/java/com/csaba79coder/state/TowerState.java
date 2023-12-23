@@ -229,16 +229,16 @@ public class TowerState extends AbstractState implements Cloneable {
         // Check if all four weights are not in downEntities or upEntities
         if (basketCapacity1Position.equalsIgnoreCase("UP") &&
                 basketCapacity2Position.equalsIgnoreCase("DOWN") &&
-                upEntities.contains(weight1) && upEntities.contains(weight2) &&
-                downEntities.contains(weight3) && downEntities.contains(weight4)) {
+                (upEntities.contains(weight1) && upEntities.contains(weight2)) &&
+                (downEntities.contains(weight3) && downEntities.contains(weight4))) {
 
             updateState(weight1, weight2, weight3, weight4);
             this.basketCapacity1Position = "DOWN";
             this.basketCapacity2Position = "UP";
         } else if (basketCapacity1Position.equalsIgnoreCase("DOWN") &&
                 basketCapacity2Position.equalsIgnoreCase("UP") &&
-                downEntities.contains(weight1) && downEntities.contains(weight2) &&
-                upEntities.contains(weight3) && upEntities.contains(weight4)) {
+                (downEntities.contains(weight1) && downEntities.contains(weight2)) &&
+                (upEntities.contains(weight3) && upEntities.contains(weight4))) {
 
             updateState(weight1, weight2, weight3, weight4);
             this.basketCapacity1Position = "UP";
