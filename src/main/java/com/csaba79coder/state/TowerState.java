@@ -42,15 +42,17 @@ public class TowerState extends AbstractState implements Cloneable {
         boolean hasUp = false;
         boolean hasDown = false;
 
+        int maxWeight = findMaxWeight();
+
         for (int weight : upEntities) {
-            if (weight >= 0) {
+            if (weight >= 0 && weight <= maxWeight) {
                 hasUp = true;
                 break;
             }
         }
 
         for (int weight : downEntities) {
-            if (weight >= 0) {
+            if (weight >= 0 && weight <= maxWeight) {
                 hasDown = true;
                 break;
             }
@@ -60,6 +62,23 @@ public class TowerState extends AbstractState implements Cloneable {
         // All entities are down, it's still a valid state
         return (hasUp && hasDown && upEntities.size() <= 5 && downEntities.size() <= 5) &&
                 hasDuplicates(upEntities) && hasDuplicates(downEntities);
+    }
+
+    private int findMaxWeight() {
+        int maxWeight = 0;
+        if (personWeightPerson1 > maxWeight) {
+            maxWeight = personWeightPerson1;
+        }
+        if (personWeightPerson2 > maxWeight) {
+            maxWeight = personWeightPerson2;
+        }
+        if (personWeightPerson3 > maxWeight) {
+            maxWeight = personWeightPerson3;
+        }
+        if (stoneWeight > maxWeight) {
+            maxWeight = stoneWeight;
+        }
+        return maxWeight;
     }
 
     private boolean hasDuplicates(Set<Integer> weights) {
